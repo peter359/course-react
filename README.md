@@ -1,1 +1,1 @@
-# course-react
+Project for the FMI course Fullstack Application Development with Node.js + Express.js + React.js
