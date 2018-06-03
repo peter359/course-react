@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 
 class Task extends Component {
-    
+    constructor(props) {
+        super(props);
+
+        this.state = { task: props.task };
+    }
 
     render() {
         return (
-            <div>Task haha </div>
+            <div>{this.state.task.title}</div>
         );
     }
 }
