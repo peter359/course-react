@@ -7,3 +7,7 @@
   padding-right: 20px
 }
 
+.registerForm > * {
+  border: none;
+  box-shadow: none;
+}
