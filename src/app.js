@@ -3,6 +3,7 @@ import { PropTypes } from 'prop-types';
 import { Route, Link, withRouter } from 'react-router-dom';
 import Base from './base';
 import ViewSprint from './components/sprint/view-sprint'
+import ViewMember from './components/members/view-members'
 import RegisterForm from './components/register/register-form';
 import { TASK_STATE } from './enums'
 import './app.css';
@@ -23,7 +24,8 @@ class App extends Component {
           { id: 5, title: 'Task 5', description: 'a lot of text haha', state: TASK_STATE.Reopened },
         ]
       },
-      users: []
+      users: [],
+      project: 'React'
     };
   }
 
@@ -47,11 +49,13 @@ class App extends Component {
       <div className="container">
         <ul className="main-menu">
           <li><Link to="/project/sprint">Active sprint</Link></li>
+          <li><Link to="/project/members">Project members</Link></li>
           <li><Link to="/register">Register</Link></li>
         </ul>
         <hr />
         <Route path="/" component={Base} />
         <Route path="/project/sprint" render={props => <ViewSprint {...this.props} sprint={this.state.sprint} />} />
+        <Route path="/project/members" render={props => <ViewMember {...this.props} members={this.state.users} project={this.state.project} />} />
         <Route path="/register" render={props => <RegisterForm {...this.props} onRegisterSubmit={this.onRegisterSubmit} />} />
       </div>
     );
