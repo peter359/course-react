@@ -25,7 +25,10 @@ class App extends Component {
         ]
       },
       users: [],
-      project: 'React'
+      members: [],
+      project: {
+        name: 'React'
+      }
     };
   }
 
@@ -44,6 +47,25 @@ class App extends Component {
     }
   }
 
+  onAddMemberSubmit = (userId) => {
+    var user = this.state.users.find(u => u.id === userId);
+    if (user !== this.state.members.find(u => u.id === userId)) {
+      this.setState(prevState => ({
+        members: [
+          ...prevState.members,
+          user
+        ]
+      }));
+      this.props.history.push('/project/members');
+    }
+  }
+
+  handleMemberRemove = (memberId) => {
+    this.setState(prevState => ({
+      members: prevState.members.filter(m => m.id !== memberId)
+    }))
+  };
+
   render() {
     return (
       <div className="container">
@@ -55,7 +77,7 @@ class App extends Component {
         <hr />
         <Route path="/" component={Base} />
         <Route path="/project/sprint" render={props => <ViewSprint {...this.props} sprint={this.state.sprint} />} />
-        <Route path="/project/members" render={props => <ViewMember {...this.props} members={this.state.users} project={this.state.project} />} />
+        <Route path="/project/members" render={props => <ViewMember {...this.props} members={this.state.members} users={this.state.users} project={this.state.project} onAddMemberSubmit={this.onAddMemberSubmit} onMemberRemove={this.handleMemberRemove}/>} />
         <Route path="/register" render={props => <RegisterForm {...this.props} onRegisterSubmit={this.onRegisterSubmit} />} />
       </div>
     );

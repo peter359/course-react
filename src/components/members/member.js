@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Member extends Component {
-    constructor(props) {
-        super(props);
+    static propTypes = {
+        onMemberRemove: PropTypes.func
+    };
 
-        this.state = { member: props.member };
-    }
+    handleDelete = () => {
+        this.props.onMemberRemove(this.props.member.id);
+    };
 
     render() {
         return (
-            <div>{this.state.member.firstName} {this.state.member.lastName}</div>
+            <div className="row">
+                {this.props.member.firstName} {this.props.member.lastName}
+                <button
+                title="Remove member"
+                className="btn btn-small btn-danger pull-right"
+                onClick={this.handleDelete}
+                >
+                    <span className="glyphicon glyphicon-remove" />
+                </button>
+            </div>
         );
     }
 }

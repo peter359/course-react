@@ -1,9 +1,7 @@
 import React from "react";
 import newId from './newid'
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 
-@withRouter
 export default class RegisterForm extends React.Component {
     static propTypes = {
         onRegisterSubmit: PropTypes.func,
