@@ -32,7 +32,7 @@ class CreateTaskForm extends React.Component {
         this.state.onTaskCreated({
             title: this.state.title,
             description: this.state.description,
-            status: this.state.status
+            state: this.state.state
         });
     }
 
@@ -61,7 +61,7 @@ class CreateTaskForm extends React.Component {
         this.setState(prev => {
             return {
                 ...prev,
-                status: e.target.value
+                state: e.target.value
             }
         })
     }
