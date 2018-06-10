@@ -71,7 +71,9 @@ class App extends Component {
     task.id = this.state.sprint.tasks.length + 1;
 
     this.setState(prev => ({
+        ...prev,
         sprint: {
+          ...prev.sprint,
           tasks: [...prev.sprint.tasks, task]
         }
     }));
