@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Task from './task';
+import TaskPreview from './task_preview';
 
 class SprintTasksSection extends Component {
     constructor(props) {
@@ -15,7 +15,7 @@ class SprintTasksSection extends Component {
         return (
             <div>
                 <h3>{this.state.title}</h3>
-                {this.state.tasks.map(t => <Task key={t.id} {...this.props} task={t} />)}
+                {this.state.tasks.map(t => <TaskPreview key={t.id} {...this.props} task={t} />)}
             </div>
         );
     }
