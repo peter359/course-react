@@ -77,6 +77,8 @@ class App extends Component {
           tasks: [...prev.sprint.tasks, task]
         }
     }));
+
+    console.log(this.state);
   }
 
   render() {

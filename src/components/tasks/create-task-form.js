@@ -13,16 +13,20 @@ class CreateTaskForm extends React.Component {
     render() {
         return (
             <div>
-                <input type="text" id="title" name="title" onChange={this.onTitleTextChange} />
-                <input type="textarea" id="description" name="title" onChange={this.onDescriptionTextChange} />
-                <select onChange={this.onStatusChange}>
-                    <option value={TASK_STATE.Open}>Open</option>
-                    <option value={TASK_STATE.InProgress}>InProgress</option>
-                    <option value={TASK_STATE.Resolved}>Resolved</option>
-                    <option value={TASK_STATE.Closed}>Closed</option>
-                    <option value={TASK_STATE.Reopened}>Reopened</option>
-                </select>
-                <button onClick={this.onCreatebuttonClick}>Create</button>
+                <input type="text" id="title" name="title" placeholder="Title" onChange={this.onTitleTextChange} />
+                <div>
+                    <textarea rows="4" cols="50" placeholder="Description..." onChange={this.onDescriptionTextChange} />
+                </div>
+                <div>
+                    <select onChange={this.onStatusChange}>
+                        <option value={TASK_STATE.Open}>Open</option>
+                        <option value={TASK_STATE.InProgress}>InProgress</option>
+                        <option value={TASK_STATE.Resolved}>Resolved</option>
+                        <option value={TASK_STATE.Closed}>Closed</option>
+                        <option value={TASK_STATE.Reopened}>Reopened</option>
+                    </select>
+                </div>
+                <button className="btn btn-danger" onClick={this.onCreatebuttonClick}>Create</button>
             </div>
         );
     }
@@ -58,10 +62,13 @@ class CreateTaskForm extends React.Component {
 
     onStatusChange = (e) => {
         e.persist();
+        
+        let state = parseInt(e.target.value);
+
         this.setState(prev => {
             return {
                 ...prev,
-                state: e.target.value
+                state: state
             }
         })
     }
