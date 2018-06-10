@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import SprintTasksSection from '../tasks/sprint-tasks-section'
 import { TASK_STATE } from '../../enums';
-import { Route, Link, withRouter } from 'react-router-dom';
-import CreateTaskForm from '../tasks/create-task-form'
 
 class ViewSprint extends Component {
     constructor(props) {
@@ -14,14 +12,12 @@ class ViewSprint extends Component {
     render() {
         return (
             <div>
-                <Link to="/project/sprint/create_task">Create task</Link>
+                
 
                 <h1>List sprint tasks - {this.state.sprint.name}</h1>
                 <SprintTasksSection {...this.props} tasks={this.openedTasks()} title={'Open'} />
                 <SprintTasksSection {...this.props} tasks={this.inProgressTasks()} title={'InProgress'} />
                 <SprintTasksSection {...this.props} tasks={this.resolvedTasks()} title={'Resolved'} />
-
-                <Route path="/project/sprint/create_task" render={props => <CreateTaskForm />} />
             </div>
         );
     }
