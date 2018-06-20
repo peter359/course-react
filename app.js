@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var sqlite3 = require('sqlite3').verbose();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -57,6 +58,27 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+// Initialize DB
+const DB_FILE = './pm_system.db';
+const db = new sqlite3.Database(DB_FILE, (err) => {
+  if (err) throw err;
+
+  //Test if comments table exists - if not create it
+  let result = db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name=?;`, ['users']);
+  
+  console.log(result);
+  
+  if (!result) {
+    console.log('Db not initialized!')
+  }
+  else {
+    console.log(`Successfully connected to SQLite server`);
+  }
+
+  //Add db as app local property
+  app.locals.db = db;
 });
 
 module.exports = app;
