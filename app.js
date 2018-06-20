@@ -12,21 +12,19 @@ var authorisationRouter = require('./routes/authorisation');
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
+var app = express();
+
 passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({ username: username }, function(err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
+  function (username, password, done) {
+    app.locals.db.get('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], (err, result) => {
+      if (result) {
+        return done(null, user);
       }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
     });
+
+    return done(null, false, { message: 'Incorrect username or password' });
   }
 ));
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,12 +43,14 @@ app.use('/users', usersRouter);
 app.use('/login', authorisationRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
+  console.log(req);
+
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -67,9 +67,9 @@ const db = new sqlite3.Database(DB_FILE, (err) => {
 
   //Test if comments table exists - if not create it
   let result = db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name=?;`, ['users']);
-  
+
   console.log(result);
-  
+
   if (!result) {
     console.log('Db not initialized!')
   }
