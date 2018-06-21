@@ -15,7 +15,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/:id', function (req, res, next) {
   const db = req.app.locals.db;
-  const params = indicative.sanitize(req.params, { id: 'to_int' }); ';
+  const params = indicative.sanitize(req.params, { id: 'to_int' });
 
   const selectQuery = 'SELECT * FROM users WHERE id = ?';
 
