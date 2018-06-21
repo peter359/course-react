@@ -1,18 +1,19 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var sqlite3 = require('sqlite3').verbose();
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const sqlite3 = require('sqlite3').verbose();
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var authorisationRouter = require('./routes/authorisation');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const authorisationRouter = require('./routes/authorisation');
+const projectsRouter = require('./routes/projects');
 
-var passport = require('passport')
+const passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
-var app = express();
+const app = express();
 
 passport.use(new LocalStrategy(
   function (username, password, done) {
@@ -38,9 +39,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/login', authorisationRouter);
+app.use('/api/projects', projectsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/login', authorisationRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
