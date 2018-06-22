@@ -34,13 +34,17 @@ router.post('/', function (req, res, next) {
   const db = req.app.locals.db;
   const user = req.body;
 
+  console.log('Creating user');
+
   indicative.validate(user, {
-    username: 'required|username|unique:users',
-    email: 'required|email|unique:users',
+    username: 'required|string|min:5',
+    email: 'required|string|min:5',
     password: 'required|min:6|max:30'
   })
     .then(() => {
       const query = 'INSERT INTO users (username, email, password) VALUES(?, ?, ?)';
+
+      console.log('User will be created');
 
       db.run(query, [user.username, user.email, user.password], function (err, result) {
         if (err) throw err;
@@ -48,10 +52,15 @@ router.post('/', function (req, res, next) {
         user.id = this.lastID;
         const uri = req.baseUrl + '/' + user.id;
 
+        console.log('User created');
+
         res.location(uri)
           .status(201)
           .json(user);
       });
+    })
+    .catch((error) => {
+      console.log(error);
     });
 });
 
