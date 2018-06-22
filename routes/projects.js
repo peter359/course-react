@@ -11,7 +11,7 @@ const getUserId = (req) => {
 // GET all projects
 router.get('/', function (req, res, next) {
     const db = req.app.locals.db;
-    const selectQuery = 'SELECT * FROM projects WHERE owner_id = ?';
+    const selectQuery = 'SELECT * FROM projects WHERE userId = ?';
 
     db.all(selectQuery, [getUserId(req)], (err, result) => {
         if (err) throw err;
@@ -76,7 +76,7 @@ router.post('/', function (req, res, next) {
         description: 'required|min:5|max:300'
     })
         .then(() => {
-            const query = 'INSERT INTO projects (name, description, owner_id) VALUES(?, ?, ?)';
+            const query = 'INSERT INTO projects (name, description, userId) VALUES(?, ?, ?)';
 
             db.run(query, [project.name, project.description, getUserId(req)], function (err, result) {
                 if (err) throw err;
