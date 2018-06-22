@@ -8,6 +8,7 @@ const getUserId = (req) => {
     return userId;
 }
 
+// GET all projects
 router.get('/', function (req, res, next) {
     const db = req.app.locals.db;
     const selectQuery = 'SELECT * FROM projects WHERE owner_id = ?';
@@ -19,6 +20,8 @@ router.get('/', function (req, res, next) {
     });
 });
 
+
+// GET project by id
 router.get('/:projectId', function (req, res, next) {
     const db = req.app.locals.db;
 
@@ -33,6 +36,7 @@ router.get('/:projectId', function (req, res, next) {
     });
 });
 
+// GET project tasks
 router.get('/:projectId/tasks', function (req, res, next) {
     const db = req.app.locals.db;
 
@@ -47,10 +51,11 @@ router.get('/:projectId/tasks', function (req, res, next) {
     });
 });
 
+// GET sprint tasks
 router.get('/:projectId/sprint/:spirntId/tasks', function (req, res, next) {
     const db = req.app.locals.db;
 
-    const params = indicative.sanitize(req.params, { projectId: 'to_int', sprintId: 'to_int'});
+    const params = indicative.sanitize(req.params, { projectId: 'to_int', sprintId: 'to_int' });
 
     const selectQuery = 'SELECT * FROM tasks t JOIN projects p ON p.id == t.projectId WHERE p.id = ? AND t.sprintId == sprintId';
 
@@ -61,6 +66,7 @@ router.get('/:projectId/sprint/:spirntId/tasks', function (req, res, next) {
     });
 });
 
+// CREATE project
 router.post('/', function (req, res, next) {
     const db = req.app.locals.db;
     const project = req.body;
@@ -85,6 +91,7 @@ router.post('/', function (req, res, next) {
         });
 });
 
+// CREATE task for project
 router.post('/:projectId/tasks', function (req, res, next) {
     const db = req.app.locals.db;
 
@@ -113,10 +120,11 @@ router.post('/:projectId/tasks', function (req, res, next) {
         });
 });
 
+// CREATE task for sprint
 router.post('/:projectId/sprint/:spirntId/tasks', function (req, res, next) {
     const db = req.app.locals.db;
 
-    const params = indicative.sanitize(req.params, { projectId: 'to_int', sprintId: 'to_int'});
+    const params = indicative.sanitize(req.params, { projectId: 'to_int', sprintId: 'to_int' });
 
     const task = req.body;
 
@@ -141,6 +149,34 @@ router.post('/:projectId/sprint/:spirntId/tasks', function (req, res, next) {
         });
 });
 
+router.put('/tasks/:taskId', function (req, res, next) {
+    const db = req.app.locals.db;
+
+    const params = indicative.sanitize(req.params, { taskId: 'to_int' });
+
+    const task = req.body;
+
+    indicative.validate(task, {
+        name: 'required',
+        description: 'required|min:5|max:300',
+        status: 'required|integer'
+    })
+        .then(() => {
+            const query = 'UPDATE tasks name = ?, description = ?, status = ? WHERE id = ?';
+
+            db.run(query, [task.name, task.description, task.status, params.taskId], function (err, result) {
+                if (err) throw err;
+                if (this.changes > 0) {
+                    res.json({ message: 'Project updated successfully' });
+                }
+                else {
+                    error(req, res, 404, `Project with Id=${params.id} not found.`);
+                }
+            });
+        });
+});
+
+// UPDATE project
 router.put('/:projectId', function (req, res, next) {
     const db = req.app.locals.db;
 
