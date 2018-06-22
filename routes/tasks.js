@@ -16,7 +16,7 @@ router.get('/project/:projectId', function (req, res, next) {
 
     const selectQuery = 'SELECT * FROM tasks t JOIN projects p ON p.id == t.projectId WHERE p.id = ?';
 
-    db.all(selectQuery, [projectId], (err, result) => {
+    db.all(selectQuery, [params.projectId], (err, result) => {
         if (err) throw err;
 
         res.json(result);
@@ -31,7 +31,7 @@ router.get('/sprint/:spirntId', function (req, res, next) {
 
     const selectQuery = 'SELECT * FROM tasks WHERE sprintId == sprintId';
 
-    db.all(selectQuery, [projectId], (err, result) => {
+    db.all(selectQuery, [params.projectId], (err, result) => {
         if (err) throw err;
 
         res.json(result);
@@ -64,6 +64,9 @@ router.post('/project/:projectId', function (req, res, next) {
                     .status(201)
                     .json(task);
             });
+        })
+        .catch(function(err) {
+            console.log(err);
         });
 });
 
