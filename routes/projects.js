@@ -36,36 +36,6 @@ router.get('/:projectId', function (req, res, next) {
     });
 });
 
-// GET project tasks
-router.get('/:projectId/tasks', function (req, res, next) {
-    const db = req.app.locals.db;
-
-    const params = indicative.sanitize(req.params, { projectId: 'to_int' });
-
-    const selectQuery = 'SELECT * FROM tasks t JOIN projects p ON p.id == t.projectId WHERE p.id = ?';
-
-    db.all(selectQuery, [projectId], (err, result) => {
-        if (err) throw err;
-
-        res.json(result);
-    });
-});
-
-// GET sprint tasks
-router.get('/:projectId/sprint/:spirntId/tasks', function (req, res, next) {
-    const db = req.app.locals.db;
-
-    const params = indicative.sanitize(req.params, { projectId: 'to_int', sprintId: 'to_int' });
-
-    const selectQuery = 'SELECT * FROM tasks t JOIN projects p ON p.id == t.projectId WHERE p.id = ? AND t.sprintId == sprintId';
-
-    db.all(selectQuery, [projectId], (err, result) => {
-        if (err) throw err;
-
-        res.json(result);
-    });
-});
-
 // CREATE project
 router.post('/', function (req, res, next) {
     const db = req.app.locals.db;
@@ -87,91 +57,6 @@ router.post('/', function (req, res, next) {
                 res.location(uri)
                     .status(201)
                     .json(project);
-            });
-        });
-});
-
-// CREATE task for project
-router.post('/:projectId/tasks', function (req, res, next) {
-    const db = req.app.locals.db;
-
-    const params = indicative.sanitize(req.params, { projectId: 'to_int' });
-
-    const task = req.body;
-
-    indicative.validate(task, {
-        name: 'required',
-        description: 'required|min:5|max:300',
-        status: 'required|integer'
-    })
-        .then(() => {
-            const query = 'INSERT INTO tasks (name, description, status, autorId, projectId) VALUES(?, ?, ?, ?, ?)';
-
-            db.run(query, [task.name, task.description, task.status, getUserId(), params.projectId], function (err, result) {
-                if (err) throw err;
-
-                task.id = this.lastID;
-                const uri = req.baseUrl + '/' + task.id;
-
-                res.location(uri)
-                    .status(201)
-                    .json(task);
-            });
-        });
-});
-
-// CREATE task for sprint
-router.post('/:projectId/sprint/:spirntId/tasks', function (req, res, next) {
-    const db = req.app.locals.db;
-
-    const params = indicative.sanitize(req.params, { projectId: 'to_int', sprintId: 'to_int' });
-
-    const task = req.body;
-
-    indicative.validate(task, {
-        name: 'required',
-        description: 'required|min:5|max:300',
-        status: 'required|integer'
-    })
-        .then(() => {
-            const query = 'INSERT INTO tasks (name, description, status, autorId, projectId, sprintId) VALUES(?, ?, ?, ?, ?, ?)';
-
-            db.run(query, [task.name, task.description, task.status, getUserId(), params.projectId, params.sprintId], function (err, result) {
-                if (err) throw err;
-
-                task.id = this.lastID;
-                const uri = req.baseUrl + '/' + task.id;
-
-                res.location(uri)
-                    .status(201)
-                    .json(task);
-            });
-        });
-});
-
-router.put('/tasks/:taskId', function (req, res, next) {
-    const db = req.app.locals.db;
-
-    const params = indicative.sanitize(req.params, { taskId: 'to_int' });
-
-    const task = req.body;
-
-    indicative.validate(task, {
-        name: 'required',
-        description: 'required|min:5|max:300',
-        status: 'required|integer'
-    })
-        .then(() => {
-            const query = 'UPDATE tasks name = ?, description = ?, status = ? WHERE id = ?';
-
-            db.run(query, [task.name, task.description, task.status, params.taskId], function (err, result) {
-                if (err) throw err;
-                if (this.changes > 0) {
-                    res.json({ message: 'Project updated successfully' });
-                }
-                else {
-                    error(req, res, 404, `Project with Id=${params.id} not found.`);
-                }
             });
         });
 });
