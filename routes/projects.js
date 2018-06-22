@@ -29,7 +29,7 @@ router.get('/:projectId', function (req, res, next) {
 
     const selectQuery = 'SELECT * FROM projects WHERE id = ?';
 
-    db.all(selectQuery, [projectId], (err, result) => {
+    db.all(selectQuery, [params.projectId], (err, result) => {
         if (err) throw err;
 
         res.json(result);
@@ -58,6 +58,9 @@ router.post('/', function (req, res, next) {
                     .status(201)
                     .json(project);
             });
+        })
+        .catch(function(err){
+            console.log(err);
         });
 });
 
