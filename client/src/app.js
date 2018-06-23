@@ -34,6 +34,18 @@ class App extends Component {
     };
   }
 
+  loadUsersFromServer = () =>
+    axios.get('/api/users/')
+      .then(({ data: users }) => {
+        // console.log("GET" , members);
+        this.setState({
+          users: users
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
   loadMembersFromServer = () =>
     axios.get('/api/projects/' + this.state.project.id + '/members')
       .then(({ data: members }) => {
@@ -48,16 +60,23 @@ class App extends Component {
 
   onRegisterSubmit = (add, user) => {
     if (add) {
-      this.setState(prevState => ({
-        users: [
-          ...prevState.users,
-          user
-        ]
-      }));
+      // this.setState(prevState => ({
+      //   users: [
+      //     ...prevState.users,
+      //     user
+      //   ]
+      // }));
+      axios.post('/api/users/', user)
+        .then(
+          this.loadUsersFromServer()
+        )
+        .catch((err) => {
+            console.error(err);
+        });
     } else {
-      this.setState(prevState => ({
-        users: prevState.users.map(u => u.id === user.id ? user : u)
-      }));
+      // this.setState(prevState => ({
+      //   users: prevState.users.map(u => u.id === user.id ? user : u)
+      // }));
     }
   }
 
@@ -109,6 +128,7 @@ class App extends Component {
 
   componentDidMount = () => {
     this.loadMembersFromServer();
+    this.loadUsersFromServer();
   }
 
   render() {

@@ -36,7 +36,7 @@ export default class AddMemberForm extends React.Component {
                     onChange={this.handleAddMemberChange}
                     >
                         <option value={-1} key={-1}></option>
-                        {this.props.users.map(u => <option value={u.id} key={u.id}>{u.firstName} {u.lastName}</option>)}
+                        {this.props.users.map(u => <option value={u.id} key={u.id}>{u.username}</option>)}
                     </select>
                     <input type="submit" value={btnName} />
                 </form>

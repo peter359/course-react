@@ -8,31 +8,37 @@ export default class RegisterForm extends React.Component {
     };
 
     state = {
-		firstName: '',
-		lastName: '',
+		username: '',
+		email: '',
+		password: '',
 	};
 
-    handleFirstNameChange = (e) => {
-        this.setState({ firstName: e.target.value });
+    handleUsernameChange = (e) => {
+        this.setState({ username: e.target.value });
     };
 
-    handleLastNameChange = (e) => {
-        this.setState({ lastName: e.target.value });
+    handlEmailChange = (e) => {
+        this.setState({ email: e.target.value });
+    };
+
+    handlPasswordChange = (e) => {
+        this.setState({ password: e.target.value });
     };
 
     handleSubmit = (e) => {
         e.preventDefault();
-        var firstName = this.state.firstName.trim();
-        var lastName = this.state.lastName.trim();
-        if (!lastName || !firstName) {
+        var username = this.state.username.trim();
+        var email = this.state.email.trim();
+        var password = this.state.password.trim();
+        if (!email || !username || !password) {
             return;
         }
         // var add = this.props.location.pathname === '/blogposts/add' ? true : false;
 		// var id = add ? newId() : this.props.id;
 		var add = true;
         var id = newId();
-		this.props.onRegisterSubmit(add, {id, firstName, lastName});
-		this.setState({lastName: '', firstName: ''});
+		this.props.onRegisterSubmit(add, {id, username, email, password});
+		this.setState({email: '', username: '', password: ''});
     };
 
     render(props) {
@@ -46,21 +52,29 @@ export default class RegisterForm extends React.Component {
                     <div className="form-control">
                         <input
                             type="text"
-                            placeholder="First Name"
-                            value={this.state.firstName}
-                            onChange={this.handleFirstNameChange}
+                            placeholder="username"
+                            value={this.state.username}
+                            onChange={this.handleUsernameChange}
                         />
                     </div>
                     <div className="form-control">
                         <input
-                            type="text"
-                            placeholder="Last Name"
-                            value={this.state.lastName}
-                            onChange={this.handleLastNameChange}
+                            type="email"
+                            placeholder="email"
+                            value={this.state.email}
+                            onChange={this.handlEmailChange}
                         />
                     </div>
                     <div className="form-control">
-                        <input type="submit" disabled={!this.state.lastName || !this.state.firstName} value={btnName} />
+                        <input
+                            type="password"
+                            placeholder="password"
+                            value={this.state.password}
+                            onChange={this.handlPasswordChange}
+                        />
+                    </div>
+                    <div className="form-control">
+                        <input type="submit" disabled={!this.state.email || !this.state.username || !this.state.password} value={btnName} />
                     </div>
                 </form>
             </div>
