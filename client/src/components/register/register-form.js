@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 
 export default class RegisterForm extends React.Component {
     static propTypes = {
-        onRegisterSubmit: PropTypes.func,
-        location: PropTypes.object.isRequired
+        onRegisterSubmit: PropTypes.func
     };
 
     state = {

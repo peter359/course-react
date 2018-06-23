@@ -91,4 +91,51 @@ router.put('/:projectId', function (req, res, next) {
         });
 });
 
+// GET all project members
+router.get('/:projectId/members', function (req, res, next) {
+    const db = req.app.locals.db;
+    const params = indicative.sanitize(req.params, { projectId: 'to_int' });
+    const selectQuery = `SELECT u.* 
+        FROM projects p 
+        JOIN project_member pm ON p.id = pm.project_id 
+        JOIN users u ON u.id = pm.user_id
+        WHERE p.id = ?`;
+
+    db.all(selectQuery, [params.projectId], (err, result) => {
+        if (err) throw err;
+
+        res.json(result);
+    });
+});
+
+// Add member
+router.post('/:projectId/members/:userId', function (req, res, next) {
+    const db = req.app.locals.db;
+    const params = indicative.sanitize(req.params, { projectId: 'to_int', userId: 'to_int' });
+    const query = 'INSERT INTO project_member (project_id, user_id) VALUES(?, ?)';
+
+    db.run(query, [params.projectId, params.userId], function (err, result) {
+        if (err) throw err;
+
+        // const pmId = this.lastID;
+        const uri = req.baseUrl + '/' + params.projectId + '/members';
+
+        res.location(uri)
+            .status(201);
+    });
+});
+
+// Remove member
+router.delete('/:projectId/members/:userId', function (req, res, next) {
+    const db = req.app.locals.db;
+    const params = indicative.sanitize(req.params, { projectId: 'to_int', userId: 'to_int' });
+    const query = 'DELETE FROM project_member WHERE project_id = ? AND user_id = ?';
+
+    db.run(query, [params.projectId, params.userId], function (err, result) {
+        if (err) throw err;
+
+        res.json({ message: 'Member removed successfully' });
+    });
+});
+
 module.exports = router;

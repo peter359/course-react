@@ -13,13 +13,13 @@ class Member extends Component {
     render() {
         return (
             <div className="row">
-                {this.props.member.firstName} {this.props.member.lastName}
+                {this.props.member.username}
                 <button
                 title="Remove member"
                 className="btn btn-small btn-danger pull-right"
                 onClick={this.handleDelete}
                 >
-                    <span className="glyphicon glyphicon-remove" />
+                    Remove<span className="glyphicon glyphicon-remove" />
                 </button>
             </div>
         );

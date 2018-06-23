@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { PropTypes } from 'prop-types';
 import { Route, Link, withRouter } from 'react-router-dom';
 import Base from './base';
@@ -27,10 +28,23 @@ class App extends Component {
       users: [],
       members: [],
       project: {
-        name: 'React'
+        name: 'React',
+        id: 1
       }
     };
   }
+
+  loadMembersFromServer = () =>
+    axios.get('/api/projects/' + this.state.project.id + '/members')
+      .then(({ data: members }) => {
+        // console.log("GET" , members);
+        this.setState({
+          members: members
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
 
   onRegisterSubmit = (add, user) => {
     if (add) {
@@ -48,22 +62,35 @@ class App extends Component {
   }
 
   onAddMemberSubmit = (userId) => {
-    var user = this.state.users.find(u => u.id === userId);
-    if (user !== this.state.members.find(u => u.id === userId)) {
-      this.setState(prevState => ({
-        members: [
-          ...prevState.members,
-          user
-        ]
-      }));
-      this.props.history.push('/project/members');
+    if (typeof(this.state.members.find(u => u.id === userId)) === 'undefined') {
+      // this.setState(prevState => ({
+      //   members: [
+      //     ...prevState.members,
+      //     user
+      //   ]
+      // }));
+      // this.props.history.push('/project/members');
+      axios.post('/api/projects/' + this.state.project.id + '/members/' + userId)
+      .then(
+        this.loadMembersFromServer()
+      )
+      .catch((err) => {
+          console.error(err);
+      });
     }
   }
 
   handleMemberRemove = (memberId) => {
-    this.setState(prevState => ({
-      members: prevState.members.filter(m => m.id !== memberId)
-    }))
+    // this.setState(prevState => ({
+    //   members: prevState.members.filter(m => m.id !== memberId)
+    // }))
+    axios.delete('/api/projects/' + this.state.project.id + '/members/' + memberId)
+      .then(
+        this.loadMembersFromServer()
+      )
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   onTaskCreated = (task) => {
@@ -78,6 +105,10 @@ class App extends Component {
     }));
 
     console.log(this.state);
+  }
+
+  componentDidMount = () => {
+    this.loadMembersFromServer();
   }
 
   render() {
