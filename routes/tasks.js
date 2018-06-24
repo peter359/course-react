@@ -41,20 +41,21 @@ router.get('/sprint/:spirntId', function (req, res, next) {
 // CREATE task for project
 router.post('/project/:projectId', function (req, res, next) {
     const db = req.app.locals.db;
-
+    
     const params = indicative.sanitize(req.params, { projectId: 'to_int' });
 
     const task = req.body;
+    console.log(task);
 
     indicative.validate(task, {
         name: 'required',
         description: 'required|min:5|max:300',
-        status: 'required|integer'
+        state: 'required|integer'
     })
         .then(() => {
-            const query = 'INSERT INTO tasks (name, description, status, autorId, projectId) VALUES(?, ?, ?, ?, ?)';
+            const query = 'INSERT INTO tasks (name, description, state, autorId, projectId) VALUES(?, ?, ?, ?, ?)';
 
-            db.run(query, [task.name, task.description, task.status, getUserId(), params.projectId], function (err, result) {
+            db.run(query, [task.name, task.description, task.state, getUserId(), params.projectId], function (err, result) {
                 if (err) throw err;
 
                 task.id = this.lastID;

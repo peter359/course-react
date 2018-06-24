@@ -17,14 +17,8 @@ class App extends Component {
 
     this.state = {
       sprint: {
-        name: 'our first demo sprint',
-        tasks: [
-          { id: 1, title: 'Task 1', description: 'a lot of text haha', state: TASK_STATE.Open },
-          { id: 2, title: 'Task 2', description: 'a lot of text haha', state: TASK_STATE.InProgress },
-          { id: 3, title: 'Task 3', description: 'a lot of text haha', state: TASK_STATE.Resoved },
-          { id: 4, title: 'Task 4', description: 'a lot of text haha', state: TASK_STATE.Closed },
-          { id: 5, title: 'Task 5', description: 'a lot of text haha', state: TASK_STATE.Reopened },
-        ]
+        name: 'Code base',
+        tasks: []
       },
       users: [],
       members: [],
@@ -33,6 +27,25 @@ class App extends Component {
         id: 1
       }
     };
+  }
+
+  loadTasksFromServer = () => {
+    axios.get('/api/tasks/project/' + this.state.project.id)
+      .then(({data: tasks}) => {
+        this.setState(prev => {
+          return {
+            ...prev,
+            sprint: {
+              ...prev,
+              tasks: tasks
+            }
+          }
+
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      });
   }
 
   loadUsersFromServer = () =>
@@ -134,22 +147,17 @@ class App extends Component {
   };
 
   onTaskCreated = (task) => {
-    task.id = this.state.sprint.tasks.length + 1;
-
-    this.setState(prev => ({
-        ...prev,
-        sprint: {
-          ...prev.sprint,
-          tasks: [...prev.sprint.tasks, task]
-        }
-    }));
-
-    console.log(this.state);
+    axios.post('/api/tasks/project/' + this.state.project.id, task)
+      .then(this.loadTasksFromServer)
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   componentDidMount = () => {
     this.loadMembersFromServer();
     this.loadUsersFromServer();
+    this.loadTasksFromServer();
   }
 
   render() {

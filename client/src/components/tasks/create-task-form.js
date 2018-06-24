@@ -13,7 +13,7 @@ class CreateTaskForm extends React.Component {
     render() {
         return (
             <div>
-                <input type="text" id="title" name="title" placeholder="Title" onChange={this.onTitleTextChange} />
+                <input type="text" id="name" name="name" placeholder="Name" onChange={this.onNameTextChange} />
                 <div>
                     <textarea rows="4" cols="50" placeholder="Description..." onChange={this.onDescriptionTextChange} />
                 </div>
@@ -34,18 +34,18 @@ class CreateTaskForm extends React.Component {
     onCreatebuttonClick = () => {
         // validation
         this.state.onTaskCreated({
-            title: this.state.title,
+            name: this.state.name,
             description: this.state.description,
             state: this.state.state
         });
     }
 
-    onTitleTextChange = (e) => {
+    onNameTextChange = (e) => {
         e.persist();
         this.setState(prev => {
             return {
                 ...prev,
-                title: e.target.value
+                name: e.target.value
             };
         });
     }
