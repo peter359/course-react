@@ -113,6 +113,26 @@ class App extends Component {
       });
   };
 
+  handleUserRemove = (userId) => {
+    axios.delete('/api/users/' + userId)
+      .then(
+        this.loadUsersFromServer()
+      )
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  handleUserEdit = (user) => {
+    axios.put('/api/users/' + user.id, user)
+      .then(
+        this.loadUsersFromServer()
+      )
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   onTaskCreated = (task) => {
     task.id = this.state.sprint.tasks.length + 1;
 
@@ -149,7 +169,7 @@ class App extends Component {
         <Route path="/project/create_task" render={props => <CreateTaskForm onTaskCreated={this.onTaskCreated} />} />
         <Route path="/project/members" render={props => <ViewMember {...this.props} members={this.state.members} users={this.state.users} project={this.state.project} onAddMemberSubmit={this.onAddMemberSubmit} onMemberRemove={this.handleMemberRemove}/>} />
         <Route path="/register" render={props => <RegisterForm {...this.props} onRegisterSubmit={this.onRegisterSubmit} />} />
-        <Route path="/users" render={props => <ViewUser {...this.props} users={this.state.users} />} />
+        <Route path="/users" render={props => <ViewUser {...this.props} users={this.state.users} onUserRemove={this.handleUserRemove} onUserEdit={this.handleUserEdit} />} />
       </div>
     );
   }

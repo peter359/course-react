@@ -89,4 +89,21 @@ router.put('/:id', function (req, res, next) {
     });
 });
 
+router.delete('/:id', function (req, res, next) {
+  const db = req.app.locals.db;
+  const params = indicative.sanitize(req.params, { id: 'to_int' });
+
+  const query = 'DELETE FROM users WHERE id = ?';
+
+  db.delete(query, [params.id], (err, result) => {
+    if (err) throw err;
+    if (this.changes > 0) {
+      res.json({ message: 'User deleted successfully' });
+    }
+    else {
+      error(req, res, 404, `User with Id=${params.id} not found.`);
+    }
+  });
+});
+
 module.exports = router;
