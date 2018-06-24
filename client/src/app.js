@@ -7,6 +7,7 @@ import ViewSprint from './components/sprint/view-sprint'
 import CreateTaskForm from './components/tasks/create-task-form'
 import ViewMember from './components/members/view-members'
 import RegisterForm from './components/register/register-form';
+import ViewUser from './components/users/view-users';
 import { TASK_STATE } from './enums'
 import './app.css';
 
@@ -139,6 +140,7 @@ class App extends Component {
           <li><Link to="/project/create_task">Create task</Link></li>
           <li><Link to="/project/members">Project members</Link></li>
           <li><Link to="/register">Register</Link></li>
+          <li><Link to="/users">Users</Link></li>
         </ul>
         <hr />
 
@@ -147,6 +149,7 @@ class App extends Component {
         <Route path="/project/create_task" render={props => <CreateTaskForm onTaskCreated={this.onTaskCreated} />} />
         <Route path="/project/members" render={props => <ViewMember {...this.props} members={this.state.members} users={this.state.users} project={this.state.project} onAddMemberSubmit={this.onAddMemberSubmit} onMemberRemove={this.handleMemberRemove}/>} />
         <Route path="/register" render={props => <RegisterForm {...this.props} onRegisterSubmit={this.onRegisterSubmit} />} />
+        <Route path="/users" render={props => <ViewUser {...this.props} users={this.state.users} />} />
       </div>
     );
   }
