@@ -14,7 +14,7 @@ router.get('/project/:projectId', function (req, res, next) {
 
     const params = indicative.sanitize(req.params, { projectId: 'to_int' });
 
-    const selectQuery = 'SELECT * FROM tasks t JOIN projects p ON p.id == t.projectId WHERE p.id = ?';
+    const selectQuery = 'SELECT * FROM tasks WHERE projectId = ?';
 
     db.all(selectQuery, [params.projectId], (err, result) => {
         if (err) throw err;
