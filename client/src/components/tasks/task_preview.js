@@ -5,8 +5,8 @@ import {Route, Link} from 'react-router-dom';
 const TaskPreview = (props) => {
     return (
         <div>
-            <Route path="/task" render={props => <Task task={props.task} />} />
-            <Link to="/task">{props.task.name}</Link>
+            <Route path={'/task/' + props.task.id} render={props => <Task task={props.task} />} />
+            <Link to={'/task/' + props.task.id}>{props.task.name}</Link>
         </div>
     );
 };
